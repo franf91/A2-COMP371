@@ -225,6 +225,9 @@ int main()
     }
 
     // Cleanup code
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
