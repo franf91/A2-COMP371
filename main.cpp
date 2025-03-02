@@ -6,39 +6,41 @@
 #include <iostream>
 
 // Vertex Shader source code
-const char *vertexShaderSource = "#version 330 core\n"
-                                 "layout (location = 0) in vec3 aPos;\n"
-                                 "layout (location = 1) in vec3 aColor;\n"
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"layout (location = 1) in vec3 aColor;\n"
 
-                                 "out vec3 vertexColor;"
+"out vec3 vertexColor;"
 
-                                 "uniform mat4 model;"
-                                 "uniform mat4 view;"
-                                 "uniform mat4 proj;"
+"uniform mat4 model;"
+"uniform mat4 view;"
+"uniform mat4 proj;"
 
-                                 "void main()\n"
-                                 "{\n"
-                                 "   gl_Position = proj * view * model * vec4(aPos, 1.0);\n"
-                                 "   vertexColor = aColor;\n"
-                                 "}\n\0";
+"void main()\n"
+"{\n"
+"   gl_Position = proj * view * model * vec4(aPos, 1.0);\n"
+"   vertexColor = aColor;\n"
+"}\n\0";
 
 // Fragment Shader source code
-const char *fragmentShaderSource = "#version 330 core\n"
-                                   "in vec3 vertexColor;\n"
-                                   "out vec4 FragColor;\n"
+const char* fragmentShaderSource = "#version 330 core\n"
+"in vec3 vertexColor;\n"
+"out vec4 FragColor;\n"
 
-                                   "void main()\n"
-                                   "{\n"
-                                   "   FragColor = vec4(vertexColor, 1.0f);\n"
-                                   "}\n\0";
+"void main()\n"
+"{\n"
+"   FragColor = vec4(vertexColor, 1.0f);\n"
+"}\n\0";
 
 // Global variables for transformations
 glm::vec3 translation = glm::vec3(0.0f);
 float rotationAngle = 0.0f;
 float scaleFactor = 1.0f;
 
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 // Process input function
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
     float d = 0.1f; // translation step
     float s = 1.1f; // scaling factor
@@ -51,11 +53,6 @@ void processInput(GLFWwindow *window)
         translation.x -= d;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         translation.x += d;
-
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        rotationAngle += glm::radians(30.0f);
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        rotationAngle -= glm::radians(30.0f);
 
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
         scaleFactor *= s;
@@ -84,7 +81,7 @@ int main()
 #endif
 
     // Create the GLFW window
-    GLFWwindow *window = glfwCreateWindow(800, 800, "OpenGL Pyramid with EBO", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 800, "OpenGL Pyramid with EBO", NULL, NULL);
     if (!window)
     {
         std::cerr << "Failed to create GLFW window!" << std::endl;
@@ -94,6 +91,9 @@ int main()
 
     // Make the OpenGL context current before initializing GLEW
     glfwMakeContextCurrent(window);
+
+    //keycallback
+    glfwSetKeyCallback(window, keyCallback);
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -130,22 +130,22 @@ int main()
 
     // Vertices coordinates
     GLfloat vertices[] =
-        {//     COORDINATES     /        COLORS       //
-         -0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f,
-         -0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f,
-         0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f,
-         0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f,
-         0.0f, 0.8f, 0.0f, 0.92f, 0.86f, 0.76f};
+    {//     COORDINATES     /        COLORS       //
+     -0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f,
+     -0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f,
+     0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f,
+     0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f,
+     0.0f, 0.8f, 0.0f, 0.92f, 0.86f, 0.76f };
 
     // Indices for vertices order
     GLuint indices[] =
-        {
-            0, 1, 2,
-            0, 2, 3,
-            0, 1, 4,
-            1, 2, 4,
-            2, 3, 4,
-            3, 0, 4};
+    {
+        0, 1, 2,
+        0, 2, 3,
+        0, 1, 4,
+        1, 2, 4,
+        2, 3, 4,
+        3, 0, 4 };
 
     // Create reference containers for the Vartex Array Object, the Vertex Buffer Object, and the Element Buffer Object
     GLuint VAO, VBO, EBO;
@@ -169,8 +169,8 @@ int main()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // Configure the Vertex Attribute so that OpenGL knows how to read the VBO
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     //  Enable the Vertex Attribute so that OpenGL knows to use it
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -228,4 +228,17 @@ int main()
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
+}
+
+//process input (for single key press)
+void keyCallback(GLFWwindow* window, int key, int sscancode, int action, int mods) {
+
+    //rotate right
+    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+        rotationAngle -= glm::radians(30.0f);
+    }
+    //rotate left
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+        rotationAngle += glm::radians(30.0f);
+    }
 }
