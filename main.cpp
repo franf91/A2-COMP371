@@ -43,7 +43,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 void processInput(GLFWwindow* window)
 {
     float d = 0.1f; // translation step
-    float s = 1.1f; // scaling factor
+    float s = 1.05f; // scaling factor
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         translation.y += d;
@@ -132,8 +132,8 @@ int main()
     GLfloat vertices[] =
     {//     COORDINATES     /        COLORS       //
      -0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f,
-     -0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f,
-     0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f,
+     -0.5f, 0.0f, -0.5f, 1.0f, 0.0f, 0.0f,
+     0.5f, 0.0f, -0.5f, 1.0f, 0.0f, 0.0f,
      0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f,
      0.0f, 0.8f, 0.0f, 0.92f, 0.86f, 0.76f };
 
